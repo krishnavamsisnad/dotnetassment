@@ -13,7 +13,7 @@ namespace Task_1.Migrations
 {
     [DbContext(typeof(BookstoreDbContext))]
     [Migration("20240621112735_intial")]
-    partial class intial
+    partial class Intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

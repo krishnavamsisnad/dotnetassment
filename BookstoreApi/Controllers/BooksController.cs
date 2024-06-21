@@ -27,14 +27,10 @@ namespace Task_1.Controllers
         {
             try
             {
-                var books = await _db.Books
-                                     .Include(b => b.Author) // Include related Author data
-                                     .ToListAsync();
+                var books = await _db.Books.ToListAsync();  
+                                    
 
-                if (books == null || books.Count == 0)
-                {
-                    return NotFound("Books not found.");
-                }
+               
 
                 return Ok(books);
             }
@@ -47,7 +43,7 @@ namespace Task_1.Controllers
 
         [HttpPost]
         [Route("addbook")]
-        public async Task<ActionResult<Book>> CreateBook(Book book)
+        public async Task<ActionResult<Book>> CreateBook([FromQuery] Book book)
         {
             try
             {
@@ -59,7 +55,7 @@ namespace Task_1.Controllers
                 // Ensure Author exists or attach existing Author
                 if (book.Author != null)
                 {
-                    var existingAuthor = await _db.Authors.FindAsync(book.Author.AuthorId);
+                    var existingAuthor = await _db.Authors.FindAsync(book);
                     if (existingAuthor != null)
                     {
                         book.Author = existingAuthor;
