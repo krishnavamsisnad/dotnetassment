@@ -32,6 +32,8 @@ namespace Task_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error getting customers.");
             }
         }
+
+
         [HttpPost]
         public async Task<ActionResult<Author>> PostAuthor(Customer customers)
         {
