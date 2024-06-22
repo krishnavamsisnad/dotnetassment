@@ -110,11 +110,6 @@ namespace Task_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting the removeAuthor.");
             }
 
-        }
-
-
-
-
 
     }
    
