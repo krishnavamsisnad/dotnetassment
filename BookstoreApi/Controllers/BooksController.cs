@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Sieve.Models;
+using Sieve.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,29 +16,23 @@ namespace Task_1.Controllers
     public class BooksController : ControllerBase
     {
         private readonly BookstoreDbContext _db;
+        private readonly SieveProcessor _processor;
         private readonly ILogger<BooksController> _logger;
 
-        public BooksController(BookstoreDbContext db, ILogger<BooksController> logger)
+        public BooksController(BookstoreDbContext db, ILogger<BooksController> logger ,SieveProcessor processor)
         {
             _db = db;
             _logger = logger;
+            _processor = processor;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<Book>>> GetBooks([FromQuery] SieveModel model )
         {
-            try
-            {
-                var books = await _db.Books.ToListAsync();  
-                                    
-
-                return Ok(books);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving data from the database.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database.");
-            }
+            var book = _db.Books.AsQueryable();
+            book = _processor.Apply(model, book);
+            var books= await book.ToListAsync();
+            return Ok(books);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBookId(int id)
