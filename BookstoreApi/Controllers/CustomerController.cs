@@ -33,6 +33,49 @@ namespace Task_1.Controllers
             }
         }
         [HttpPost]
-        public async Task<>
+        public async Task<ActionResult<Author>> PostAuthor(Customer customers)
+        {
+            _db.Customers.Add(customers);
+            await _db.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetCustomer), new { id =customers.CustomerId }, customers);
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Author>> DeletCakes(int id)
+        {
+            if (_db.Customers == null)
+            {
+                return NotFound();
+            }
+            var cak = await _db.Customers.FindAsync(id);
+            if (cak == null)
+            {
+                return NotFound();
+            }
+            _db.Customers.Remove(cak);
+            await _db.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCakes(int id, Customer customer)
+        {
+
+
+            var  = await _db.Customers.FindAsync(id);
+            if (existingCake == null)
+            {
+                return NotFound("Cake not found.");
+            }
+
+            existingCake.Nameofcake = cake.Nameofcake;
+            existingCake.Prince = cake.Prince;
+
+            _dbcontext.Cakesdatas.Update(existingCake);
+            await _dbcontext.SaveChangesAsync();
+
+            return Ok(existingCake);
+        }
     }
+
+    
 }
