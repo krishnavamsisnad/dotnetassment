@@ -109,6 +109,7 @@ namespace Task_1.Controllers
                 _logger.LogError(ex, "Error deleting the removeAuthor.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting the removeAuthor.");
             }
+        }
 
 
     }
