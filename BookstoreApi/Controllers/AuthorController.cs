@@ -25,9 +25,6 @@ namespace Task_1.Controllers
             {
                 var books = await _db.Authors.ToListAsync();
 
-
-
-
                 return Ok(books);
             }
             catch (Exception ex)
@@ -36,6 +33,32 @@ namespace Task_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database.");
             }
         }
+        [HttpGet("{id}")]
+       
+        public async Task<ActionResult<Author>> GetAuthorId(int id)
+        {
+            try
+            {
+                if (_db.Authors == null)
+                {
+                    return NotFound();
+                }
+                var authId = await _db.Authors.FindAsync(id);
+                if (authId == null)
+                {
+                    return NotFound();
+                }
+                return authId;
+            }
+            catch (Exception ex)
+            {
+              
+                _logger.LogError(ex, "Error getting author by id");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+
         [HttpPost]
         [Route("AddAuthor")]
         public async Task<ActionResult<Author>> PostAuthor(Author author)

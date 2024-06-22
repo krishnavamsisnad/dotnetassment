@@ -30,8 +30,6 @@ namespace Task_1.Controllers
                 var books = await _db.Books.ToListAsync();  
                                     
 
-               
-
                 return Ok(books);
             }
             catch (Exception ex)
@@ -40,47 +38,58 @@ namespace Task_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving data from the database.");
             }
         }
-
-        [HttpPost]
-        [Route("addbook")]
-        public async Task<ActionResult<Book>> CreateBook([FromQuery] Book book)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Book>> GetBookId(int id)
         {
             try
             {
-                if (book == null)
+                if (_db.Books == null)
                 {
-                    return BadRequest("Book is null.");
+                    return NotFound();
                 }
-
-                // Ensure Author exists or attach existing Author
-                if (book.Author != null)
+                var bookId = await _db.Books.FindAsync(id);
+                if (bookId == null)
                 {
-                    var existingAuthor = await _db.Authors.FindAsync(book);
-                    if (existingAuthor != null)
-                    {
-                        book.Author = existingAuthor;
-                    }
-                    else
-                    {
-                        return BadRequest("Author does not exist.");
-                    }
+                    return NotFound();
                 }
-
-                _db.Books.Add(book);
-                await _db.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetBooks), new { id = book.BookId }, book);
-            }
-            catch (DbUpdateException dbEx)
-            {
-                _logger.LogError(dbEx, "Error saving data to the database.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error saving data to the database.");
+                return bookId;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unexpected error occurred.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+                _logger.LogError(ex, "Error getting book by id");
+                return StatusCode(500, "Internal Server Error");
             }
+        }
+        [HttpPost]
+        [Route("addbook")]
+        public async Task<ActionResult<Book>> CreateBook([FromBody] Book book)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (book == null)
+            {
+                return BadRequest("Book is null.");
+            }
+
+            if (book.Author != null)
+            {
+                var existingAuthor = await _db.Authors.FindAsync(book.Author.AuthorId);
+                if (existingAuthor != null)
+                {
+                    book.Author = existingAuthor;
+                }
+                else
+                {
+                    return BadRequest("Author does not exist.");
+                }
+            }
+
+            _db.Books.Add(book);
+            await _db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetBooks), new { id = book.BookId }, book);
         }
 
         [HttpPut("{id}")]

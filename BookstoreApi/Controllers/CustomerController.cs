@@ -33,7 +33,29 @@ namespace Task_1.Controllers
             }
         }
 
-       
+        [HttpGet("{id}")]
+     
+        public async Task<ActionResult<Customer>> GetCustomerId(int id)
+        {
+            try
+            {
+                if (_db.Customers == null)
+                {
+                    return NotFound();
+                }
+                var custId = await _db.Customers.FindAsync(id);
+                if (custId == null)
+                {
+                    return NotFound();
+                }
+                return custId;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting customer by id");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
         [HttpPost]
         public async Task<ActionResult<Author>> PostAuthor(Customer customers)
         {
