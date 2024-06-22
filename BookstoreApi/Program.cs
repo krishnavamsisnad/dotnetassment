@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Sieve.Services;
 using Task_1.Data;
 
 namespace Task_1
@@ -16,7 +17,7 @@ namespace Task_1
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddSingleton<SieveProcessor>();
 
             var app = builder.Build();
 
