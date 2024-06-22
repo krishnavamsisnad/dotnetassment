@@ -1,4 +1,7 @@
 
+using Bookstore.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Bookstore
 {
     public class Program
@@ -8,6 +11,7 @@ namespace Bookstore
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<BookstoreDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Bookdb")));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

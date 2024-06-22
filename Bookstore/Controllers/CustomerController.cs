@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Bookstore.Data;
+using Bookstore.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task_1.Data;
-using Task_1.Models;
+using Bookstore.Data;
+using Bookstore.Models;
 
-namespace Task_1.Controllers
+namespace Bookstore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -34,7 +36,7 @@ namespace Task_1.Controllers
         }
 
         [HttpGet("{id}")]
-     
+
         public async Task<ActionResult<Customer>> GetCustomerId(int id)
         {
             try
@@ -61,7 +63,7 @@ namespace Task_1.Controllers
         {
             _db.Customers.Add(customers);
             await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetCustomer), new { id =customers.CustomerId }, customers);
+            return CreatedAtAction(nameof(GetCustomer), new { id = customers.CustomerId }, customers);
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult<Customer>> DeletCakes(int id)
@@ -70,7 +72,7 @@ namespace Task_1.Controllers
             {
                 return NotFound();
             }
-            var removecustomer= await _db.Customers.FindAsync(id);
+            var removecustomer = await _db.Customers.FindAsync(id);
             if (removecustomer == null)
             {
                 return NotFound();
@@ -79,18 +81,18 @@ namespace Task_1.Controllers
             await _db.SaveChangesAsync();
             return Ok();
         }
-        [HttpPut("{id}")]   
+        [HttpPut("{id}")]
         public async Task<ActionResult<Customer>> UpdateCustomer(int id, Customer customer)
         {
-           var seller = await _db.Customers.FindAsync(id);
+            var seller = await _db.Customers.FindAsync(id);
             if (seller == null)
             {
                 return NotFound("Customer not found.");
             }
 
             seller.CustomerId = customer.CustomerId;
-            seller.Name= customer.Name;
-            seller.Email= customer.Email;
+            seller.Name = customer.Name;
+            seller.Email = customer.Email;
 
             _db.Customers.Update(customer);
             await _db.SaveChangesAsync();
@@ -99,5 +101,5 @@ namespace Task_1.Controllers
         }
     }
 
-    
+
 }

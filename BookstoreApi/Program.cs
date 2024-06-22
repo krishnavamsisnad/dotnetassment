@@ -21,7 +21,6 @@ namespace Task_1
 
             var app = builder.Build();
 
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -29,7 +28,7 @@ namespace Task_1
                 app.UseSwaggerUI(
                     c =>
                     {
-                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookstore API V1");
+                        c.SwaggerEndpoint("/swagger/v1/swagger", "Bookstore API V1");
                     });
             }
 
