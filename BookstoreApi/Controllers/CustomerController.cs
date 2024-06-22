@@ -56,25 +56,6 @@ namespace Task_1.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCakes(int id, Customer customer)
-        {
-
-
-            var  = await _db.Customers.FindAsync(id);
-            if (existingCake == null)
-            {
-                return NotFound("Cake not found.");
-            }
-
-            existingCake.Nameofcake = cake.Nameofcake;
-            existingCake.Prince = cake.Prince;
-
-            _dbcontext.Cakesdatas.Update(existingCake);
-            await _dbcontext.SaveChangesAsync();
-
-            return Ok(existingCake);
-        }
     }
 
     
