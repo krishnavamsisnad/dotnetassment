@@ -33,7 +33,7 @@ namespace Task_1.Controllers
             }
         }
 
-
+       
         [HttpPost]
         public async Task<ActionResult<Author>> PostAuthor(Customer customers)
         {
@@ -48,16 +48,33 @@ namespace Task_1.Controllers
             {
                 return NotFound();
             }
-            var cak = await _db.Customers.FindAsync(id);
-            if (cak == null)
+            var removecustomer= await _db.Customers.FindAsync(id);
+            if (removecustomer == null)
             {
                 return NotFound();
             }
-            _db.Customers.Remove(cak);
+            _db.Customers.Remove(removecustomer);
             await _db.SaveChangesAsync();
             return Ok();
         }
+        [HttpPut("{id}")]   
+        public async Task<ActionResult<Customer>> UpdateCustomer(int id, Customer customer)
+        {
+           var seller = await _db.Customers.FindAsync(id);
+            if (seller == null)
+            {
+                return NotFound("Customer not found.");
+            }
 
+            seller.CustomerId = customer.CustomerId;
+            seller.Name= customer.Name;
+            seller.Email= customer.Email;
+
+            _db.Customers.Update(customer);
+            await _db.SaveChangesAsync();
+
+            return Ok(seller);
+        }
     }
 
     
