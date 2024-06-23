@@ -19,7 +19,7 @@ namespace Project_1.Models
         [ForeignKey("Author")]
         public int AuthorId { get; set; } // Foreign key for Author
 
-        public virtual Author? Author { get; set; }
+        public virtual BookAuthor? Author { get; set; }
     }
 }
 

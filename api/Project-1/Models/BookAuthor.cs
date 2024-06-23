@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Project_1.Models
 {
-    public class Author
+    public class BookAuthor
     {
         [Key]
         [Sieve(CanFilter = true, CanSort = true)] public required int AuthorId { get; set; }

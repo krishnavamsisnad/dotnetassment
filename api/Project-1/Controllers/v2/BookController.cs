@@ -1,25 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Project_1.Data;
+using Project_1.Models;
 using Sieve.Models;
 using Sieve.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Task_1.Data;
-using Task_1.Models;
 
-namespace Task_1.Controllers
+namespace Project_1.Controllers.v2
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BooksController : ControllerBase
-    {
-        private readonly BookstoreDbContext _db;
-        private readonly SieveProcessor _processor;
-        private readonly ILogger<BooksController> _logger;
+      [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("2.0")]
 
-        public BooksController(BookstoreDbContext db, ILogger<BooksController> logger ,SieveProcessor processor)
+    public class BookController : ControllerBase
+    {
+        private readonly BookstoreDbContextcs _db;
+        private readonly SieveProcessor _processor;
+        private readonly ILogger<BookController> _logger;
+
+        public BookController(BookstoreDbContextcs db, ILogger<BookController> logger, SieveProcessor processor)
         {
             _db = db;
             _logger = logger;
@@ -27,11 +26,11 @@ namespace Task_1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks([FromQuery] SieveModel model )
+        public async Task<ActionResult<IEnumerable<Book>>> GetBooks([FromQuery] SieveModel model)
         {
             var book = _db.Books.AsQueryable();
             book = _processor.Apply(model, book);
-            var books= await book.ToListAsync();
+            var books = await book.ToListAsync();
             return Ok(books);
         }
         [HttpGet("{id}")]
@@ -71,7 +70,7 @@ namespace Task_1.Controllers
 
             if (book.Author != null)
             {
-                var existingAuthor = await _db.Authors.FindAsync(book.Author.AuthorId);
+                var existingAuthor = await _db.BookAuthors.FindAsync(book.Author.AuthorId);
                 if (existingAuthor != null)
                 {
                     book.Author = existingAuthor;

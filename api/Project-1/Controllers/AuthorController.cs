@@ -24,23 +24,30 @@ namespace Project_1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors([FromQuery] SieveModel model)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<BookAuthor>>> GetAuthors([FromQuery] SieveModel model)
         {
-            var authors = _db.Authors.AsQueryable();
+            var authors = _db.BookAuthors.AsQueryable();
             authors = _processor.Apply(model, authors);
             var result = await authors.ToArrayAsync();
             return Ok(result);
         }
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthorById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<BookAuthor>> GetAuthorById(int id)
         {
             try
             {
-                if (_db.Authors == null)
+                if (_db.BookAuthors == null)
                 {
                     return NotFound();
                 }
-                var author = await _db.Authors.FindAsync(id);
+                var author = await _db.BookAuthors.FindAsync(id);
                 if (author == null)
                 {
                     return NotFound();
@@ -53,10 +60,13 @@ namespace Project_1.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-
         [HttpPost]
         [Route("authors")]
-        public async Task<ActionResult<Author>> CreateAuthor(Author author)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<ActionResult<BookAuthor>> CreateAuthor(BookAuthor author)
         {
             try
             {
@@ -65,7 +75,7 @@ namespace Project_1.Controllers
                     return BadRequest("Author is null.");
                 }
 
-                _db.Authors.Add(author);
+                _db.BookAuthors.Add(author);
                 await _db.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetAuthors), new { id = author.AuthorId }, author);
@@ -81,18 +91,22 @@ namespace Project_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
             }
         }
-        [HttpDelete("{authorId}")]
-        public async Task<ActionResult<Author>> DeleteAuthor(int authorId)
+          [HttpDelete("{authorId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<ActionResult<BookAuthor>> DeleteAuthor(int authorId)
         {
             try
             {
-                var author = await _db.Authors.FindAsync(authorId);
+                var author = await _db.BookAuthors.FindAsync(authorId);
                 if (author == null)
                 {
                     return NotFound();
                 }
 
-                _db.Authors.Remove(author);
+                _db.BookAuthors.Remove(author);
                 await _db.SaveChangesAsync();
 
                 return Ok(author);
@@ -103,19 +117,23 @@ namespace Project_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting the author.");
             }
         }
+
         [HttpPut("{authorId}")]
-        public async Task<ActionResult<Author>> UpdateAuthor(int authorId, Author author)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<BookAuthor>> UpdateAuthor(int authorId, BookAuthor author)
         {
             try
             {
-                var existingAuthor = await _db.Authors.FindAsync(authorId);
+                var existingAuthor = await _db.BookAuthors.FindAsync(authorId);
                 if (existingAuthor == null)
                 {
                     return NotFound();
                 }
 
                 existingAuthor.Name = author.Name;
-                _db.Authors.Update(existingAuthor);
+                _db.BookAuthors.Update(existingAuthor);
                 await _db.SaveChangesAsync();
 
                 return Ok(existingAuthor);

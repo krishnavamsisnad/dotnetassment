@@ -21,6 +21,9 @@ namespace Project_1.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomer()
         {
             try
@@ -35,7 +38,9 @@ namespace Project_1.Controllers
         }
 
         [HttpGet("{id}")]
-
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Customer>> GetCustomerId(int id)
         {
             try
@@ -58,6 +63,9 @@ namespace Project_1.Controllers
             }
         }
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customers)
         {
             _db.Customers.Add(customers);
@@ -81,6 +89,9 @@ namespace Project_1.Controllers
             return Ok();
         }
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Customer>> UpdateCustomer(int id, Customer customer)
         {
             var seller = await _db.Customers.FindAsync(id);

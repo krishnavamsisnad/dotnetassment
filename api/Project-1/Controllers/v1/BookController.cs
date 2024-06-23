@@ -1,27 +1,24 @@
-﻿using Bookstore.Data;
-using Bookstore.Models;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Project_1.Data;
+using Project_1.Models;
 using Sieve.Models;
 using Sieve.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Bookstore.Data;
-using Bookstore.Models;
 
-namespace Bookstore.Controllers
+namespace Project_1.Controllers.v1
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
-    {
-        private readonly BookstoreDbContext _db;
-        private readonly SieveProcessor _processor;
-        private readonly ILogger<BooksController> _logger;
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
 
-        public BooksController(BookstoreDbContext db, ILogger<BooksController> logger, SieveProcessor processor)
+    public class BookController : ControllerBase
+    {
+        private readonly BookstoreDbContextcs _db;
+        private readonly SieveProcessor _processor;
+        private readonly ILogger<BookController> _logger;
+
+        public BookController(BookstoreDbContextcs db, ILogger<BookController> logger, SieveProcessor processor)
         {
             _db = db;
             _logger = logger;
@@ -73,7 +70,7 @@ namespace Bookstore.Controllers
 
             if (book.Author != null)
             {
-                var existingAuthor = await _db.Authors.FindAsync(book.Author.AuthorId);
+                var existingAuthor = await _db.BookAuthors.FindAsync(book.Author.AuthorId);
                 if (existingAuthor != null)
                 {
                     book.Author = existingAuthor;

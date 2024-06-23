@@ -22,24 +22,6 @@ namespace Project_1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Project_1.Models.Author", b =>
-                {
-                    b.Property<int>("AuthorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("AuthorId");
-
-                    b.ToTable("Authors");
-                });
-
             modelBuilder.Entity("Project_1.Models.Book", b =>
                 {
                     b.Property<int>("BookId")
@@ -69,6 +51,24 @@ namespace Project_1.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("Project_1.Models.BookAuthor", b =>
+                {
+                    b.Property<int>("AuthorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("AuthorId");
+
+                    b.ToTable("BookAuthors", (string)null);
+                });
+
             modelBuilder.Entity("Project_1.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
@@ -91,7 +91,7 @@ namespace Project_1.Migrations
 
             modelBuilder.Entity("Project_1.Models.Book", b =>
                 {
-                    b.HasOne("Project_1.Models.Author", "Author")
+                    b.HasOne("Project_1.Models.BookAuthor", "Author")
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -100,7 +100,7 @@ namespace Project_1.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Project_1.Models.Author", b =>
+            modelBuilder.Entity("Project_1.Models.BookAuthor", b =>
                 {
                     b.Navigation("Books");
                 });
