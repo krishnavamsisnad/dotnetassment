@@ -18,7 +18,6 @@ namespace Project_1.Models
         [Sieve(CanFilter = true, CanSort = true)] public DateTime? PublicationDate { get; set; }
         [ForeignKey("Author")]
         public int AuthorId { get; set; } // Foreign key for Author
-
         public virtual BookAuthor? Author { get; set; }
     }
 }

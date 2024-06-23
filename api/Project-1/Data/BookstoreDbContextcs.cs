@@ -12,11 +12,18 @@ namespace Project_1.Data
         public DbSet<Customer> Customers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //1 to 1
             modelBuilder.Entity<Book>()
                .HasOne(b => b.Author)
                .WithMany(a => a.Books)
                .HasForeignKey(b => b.AuthorId);
-            modelBuilder.Entity<BookAuthor>().ToTable("BookAuthors");
+            
+            //1 to Many
+            modelBuilder.Entity<BookAuthor>()
+                .HasMany(b => b.Books)
+                .WithOne(b => b.Author)
+                .HasForeignKey(a=>a.AuthorId);
+               
         }
 
     }
