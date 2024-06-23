@@ -1,13 +1,12 @@
-﻿using Bookstore.Data;
-using Bookstore.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sieve.Models;
 using Sieve.Services;
-using Bookstore.Data;
-using Bookstore.Models;
-namespace Bookstore.Controllers
+using Task_1.Data;
+using Task_1.Models;
+
+namespace Task_1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -31,7 +30,7 @@ namespace Bookstore.Controllers
             return Ok(authors);
         }
         [HttpGet("{id}")]
-
+       
         public async Task<ActionResult<Author>> GetAuthorId(int id)
         {
             try
@@ -49,7 +48,7 @@ namespace Bookstore.Controllers
             }
             catch (Exception ex)
             {
-
+              
                 _logger.LogError(ex, "Error getting author by id");
                 return StatusCode(500, "Internal Server Error");
             }
@@ -57,7 +56,7 @@ namespace Bookstore.Controllers
 
 
         [HttpPost]
-       
+        [Route("AddAuthor")]
         public async Task<ActionResult<Author>> PostAuthor(Author author)
         {
             try
@@ -108,7 +107,7 @@ namespace Bookstore.Controllers
             }
 
         }
-
+      
         [HttpDelete("{Authorid}")]
         public async Task<ActionResult<Author>> RemovAuthor(int Authorid)
         {
@@ -134,5 +133,5 @@ namespace Bookstore.Controllers
 
 
     }
-
+   
 }
