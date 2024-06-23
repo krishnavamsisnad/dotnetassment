@@ -7,7 +7,7 @@ using Project_1.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<BookstoreDbContextcs>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Bookdb")));
+builder.Services.AddDbContext<BookstoreDbContextcs>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Bookstore")));
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
