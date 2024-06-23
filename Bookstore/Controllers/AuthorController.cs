@@ -58,7 +58,7 @@ namespace Bookstore.Controllers
 
 
         [HttpPost]
-        [Route("AddAuthor")]
+       
         public async Task<ActionResult<Author>> PostAuthor(Author author)
         {
             try
