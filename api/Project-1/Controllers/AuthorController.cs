@@ -15,22 +15,24 @@ namespace Project_1.Controllers
         private readonly BookstoreDbContextcs _db;
         private readonly SieveProcessor _processor;
         private readonly ILogger<AuthorController> _logger;
+
         public AuthorController(BookstoreDbContextcs db, ILogger<AuthorController> logger, SieveProcessor processor)
         {
             _db = db;
             _logger = logger;
             _processor = processor;
         }
-        public async Task<ActionResult<IEnumerable<Author>>> GetAuthor([FromQuery] SieveModel model)
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors([FromQuery] SieveModel model)
         {
-            var auth = _db.Authors.AsQueryable();
-            auth = _processor.Apply(model, auth);
-            var authors = await auth.ToListAsync();
-            return Ok(authors);
+            var authors = _db.Authors.AsQueryable();
+            authors = _processor.Apply(model, authors);
+            var result = await authors.ToArrayAsync();
+            return Ok(result);
         }
         [HttpGet("{id}")]
-
-        public async Task<ActionResult<Author>> GetAuthorId(int id)
+        public async Task<ActionResult<Author>> GetAuthorById(int id)
         {
             try
             {
@@ -38,25 +40,23 @@ namespace Project_1.Controllers
                 {
                     return NotFound();
                 }
-                var authId = await _db.Authors.FindAsync(id);
-                if (authId == null)
+                var author = await _db.Authors.FindAsync(id);
+                if (author == null)
                 {
                     return NotFound();
                 }
-                return authId;
+                return Ok(author);
             }
             catch (Exception ex)
             {
-
                 _logger.LogError(ex, "Error getting author by id");
                 return StatusCode(500, "Internal Server Error");
             }
         }
 
-
         [HttpPost]
-        [Route("AddAuthor")]
-        public async Task<ActionResult<Author>> PostAuthor(Author author)
+        [Route("authors")]
+        public async Task<ActionResult<Author>> CreateAuthor(Author author)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace Project_1.Controllers
                 _db.Authors.Add(author);
                 await _db.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetAuthor), new { id = author.AuthorId }, author);
+                return CreatedAtAction(nameof(GetAuthors), new { id = author.AuthorId }, author);
             }
             catch (DbUpdateException dbEx)
             {
@@ -81,57 +81,52 @@ namespace Project_1.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
             }
         }
-        [HttpPut("{Authorid}")]
-        public async Task<ActionResult<Author>> UpdateAuthor(int Authorid, Author author)
+        [HttpDelete("{authorId}")]
+        public async Task<ActionResult<Author>> DeleteAuthor(int authorId)
         {
             try
             {
-                var authors = await _db.Authors.FindAsync(Authorid);
-                if (authors == null)
+                var author = await _db.Authors.FindAsync(authorId);
+                if (author == null)
                 {
                     return NotFound();
                 }
 
-                authors.AuthorId = author.AuthorId;
-                author.Name = author.Name;
-                _db.Authors.Update(authors);
+                _db.Authors.Remove(author);
                 await _db.SaveChangesAsync();
 
-                return Ok(authors);
+                return Ok(author);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting the author.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting the author.");
+            }
+        }
+        [HttpPut("{authorId}")]
+        public async Task<ActionResult<Author>> UpdateAuthor(int authorId, Author author)
+        {
+            try
+            {
+                var existingAuthor = await _db.Authors.FindAsync(authorId);
+                if (existingAuthor == null)
+                {
+                    return NotFound();
+                }
+
+                existingAuthor.Name = author.Name;
+                _db.Authors.Update(existingAuthor);
+                await _db.SaveChangesAsync();
+
+                return Ok(existingAuthor);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating the author.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error updating the author.");
             }
-
-        }
-
-        [HttpDelete("{Authorid}")]
-        public async Task<ActionResult<Author>> RemovAuthor(int Authorid)
-        {
-            try
-            {
-                var removeAuthor = await _db.Authors.FindAsync(Authorid);
-                if (removeAuthor == null)
-                {
-                    return NotFound();
-                }
-
-                _db.Authors.Remove(removeAuthor);
-                await _db.SaveChangesAsync();
-
-                return Ok(removeAuthor);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting the removeAuthor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting the removeAuthor.");
-            }
         }
 
 
     }
-
 }
-
