@@ -66,7 +66,7 @@ namespace Project_1.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<Author>> CreateAuthor(Author author)
+        public async Task<ActionResult<Author>> CreateAuthor([FromQuery] Author author)
         {
             try
             {

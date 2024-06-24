@@ -73,6 +73,9 @@ namespace Project_1.Controllers
             return CreatedAtAction(nameof(GetCustomer), new { id = customers.CustomerId }, customers);
         }
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Customer>> DeletCakes(int id)
         {
             if (_db.Customers == null)
