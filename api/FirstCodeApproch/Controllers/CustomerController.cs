@@ -100,10 +100,9 @@ namespace Project_1.Controllers
                 return NotFound("Customer not found.");
             }
 
-            seller.CustomerId = customer.CustomerId;
+          
             seller.Name = customer.Name;
             seller.Email = customer.Email;
-
             _db.Customers.Update(customer);
             await _db.SaveChangesAsync();
 

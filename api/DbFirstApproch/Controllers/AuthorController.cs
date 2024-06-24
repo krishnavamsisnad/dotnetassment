@@ -66,15 +66,15 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<Author>> CreateAuthor(Author author)
+        public async Task<ActionResult<Author>> CreateAuthor([FromBody] Author author)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                if (author == null)
-                {
-                    return BadRequest("Author is null.");
-                }
-
                 _db.Authors.Add(author);
                 await _db.SaveChangesAsync();
 
@@ -122,8 +122,13 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Author>> UpdateAuthor(int authorId, Author author)
+        public async Task<ActionResult<Author>> UpdateAuthor(int authorId, [FromBody] Author author)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var existingAuthor = await _db.Authors.FindAsync(authorId);
