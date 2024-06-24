@@ -66,7 +66,7 @@ namespace Project_1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customers)
+        public async Task<ActionResult<Customer>> PostCustomer([FromQuery] Customer customers)
         {
             _db.Customers.Add(customers);
             await _db.SaveChangesAsync();
