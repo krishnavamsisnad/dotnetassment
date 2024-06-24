@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DbFirstApproch.Models
 {
-    public class BookAuthor
+    public class Author
     {
         [Key]
         [Sieve(CanFilter = true, CanSort = true)] public required int AuthorId { get; set; }

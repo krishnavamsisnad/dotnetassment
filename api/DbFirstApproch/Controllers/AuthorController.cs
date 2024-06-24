@@ -27,9 +27,9 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<BookAuthor>>> GetAuthors([FromQuery] SieveModel model)
+        public async Task<ActionResult<IEnumerable<Author>>> GetAuthors([FromQuery] SieveModel model)
         {
-            var authors = _db.BookAuthors.AsQueryable();
+            var authors = _db.Authors.AsQueryable();
             authors = _processor.Apply(model, authors);
             var result = await authors.ToArrayAsync();
             return Ok(result);
@@ -39,15 +39,15 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BookAuthor>> GetAuthorById(int id)
+        public async Task<ActionResult<Author>> GetAuthorById(int id)
         {
             try
             {
-                if (_db.BookAuthors == null)
+                if (_db.Authors == null)
                 {
                     return NotFound();
                 }
-                var author = await _db.BookAuthors.FindAsync(id);
+                var author = await _db.Authors.FindAsync(id);
                 if (author == null)
                 {
                     return NotFound();
@@ -66,7 +66,7 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<BookAuthor>> CreateAuthor(BookAuthor author)
+        public async Task<ActionResult<Author>> CreateAuthor(Author author)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace DbFirstApproch.Controllers
                     return BadRequest("Author is null.");
                 }
 
-                _db.BookAuthors.Add(author);
+                _db.Authors.Add(author);
                 await _db.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetAuthors), new { id = author.AuthorId }, author);
@@ -96,17 +96,17 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<BookAuthor>> DeleteAuthor(int authorId)
+        public async Task<ActionResult<Author>> DeleteAuthor(int authorId)
         {
             try
             {
-                var author = await _db.BookAuthors.FindAsync(authorId);
+                var author = await _db.Authors.FindAsync(authorId);
                 if (author == null)
                 {
                     return NotFound();
                 }
 
-                _db.BookAuthors.Remove(author);
+                _db.Authors.Remove(author);
                 await _db.SaveChangesAsync();
 
                 return Ok(author);
@@ -122,18 +122,18 @@ namespace DbFirstApproch.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BookAuthor>> UpdateAuthor(int authorId, BookAuthor author)
+        public async Task<ActionResult<Author>> UpdateAuthor(int authorId, Author author)
         {
             try
             {
-                var existingAuthor = await _db.BookAuthors.FindAsync(authorId);
+                var existingAuthor = await _db.Authors.FindAsync(authorId);
                 if (existingAuthor == null)
                 {
                     return NotFound();
                 }
 
                 existingAuthor.Name = author.Name;
-                _db.BookAuthors.Update(existingAuthor);
+                _db.Authors.Update(existingAuthor);
                 await _db.SaveChangesAsync();
 
                 return Ok(existingAuthor);

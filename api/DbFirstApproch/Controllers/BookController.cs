@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sieve.Models;
 using Sieve.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Project_1.Controllers.v1
 {
@@ -68,7 +69,7 @@ namespace Project_1.Controllers.v1
 
             if (book.Author != null)
             {
-                var existingAuthor = await _db.BookAuthors.FindAsync(book.Author.AuthorId);
+                var existingAuthor = await _db.Authors.FindAsync(book.Author.AuthorId);
                 if (existingAuthor != null)
                 {
                     book.Author = existingAuthor;
@@ -84,8 +85,8 @@ namespace Project_1.Controllers.v1
 
             return CreatedAtAction(nameof(GetBooks), new { id = book.BookId }, book);
         }
-
-        [HttpPut("{id}")]
+   
+          [HttpPut("{id}")]
         public async Task<ActionResult<Book>> UpdateBook(int id, Book book)
         {
             try

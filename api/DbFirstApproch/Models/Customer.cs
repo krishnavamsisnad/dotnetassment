@@ -11,5 +11,6 @@ namespace DbFirstApproch.Models
         [Sieve(CanFilter = true, CanSort = true)] public string? Name { get; set; }
         [EmailAddress]
         [Sieve(CanFilter = true, CanSort = true)] public string? Email { get; set; }
+ 
     }
 }
