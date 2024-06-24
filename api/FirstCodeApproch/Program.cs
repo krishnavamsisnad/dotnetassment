@@ -8,7 +8,7 @@ using Sieve.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<BookstoreDbContextcs>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Bookstore")));
+builder.Services.AddDbContext<BookstoreDbContextcs>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Book")));
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;

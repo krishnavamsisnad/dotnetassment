@@ -70,7 +70,7 @@ namespace Project_1.Controllers.v2
 
             if (book.Author != null)
             {
-                var existingAuthor = await _db.BookAuthors.FindAsync(book.Author.AuthorId);
+                var existingAuthor = await _db.Authors.FindAsync(book.AuthorId);
                 if (existingAuthor != null)
                 {
                     book.Author = existingAuthor;
@@ -86,6 +86,7 @@ namespace Project_1.Controllers.v2
 
             return CreatedAtAction(nameof(GetBooks), new { id = book.BookId }, book);
         }
+
 
         [HttpPut("{id}")]
         public async Task<ActionResult<Book>> UpdateBook(int id, Book book)

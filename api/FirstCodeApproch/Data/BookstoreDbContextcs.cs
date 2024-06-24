@@ -8,8 +8,9 @@ namespace Project_1.Data
 
         public BookstoreDbContextcs(DbContextOptions<BookstoreDbContextcs> options) : base(options) { }
         public DbSet<Book> Books { get; set; }
-        public DbSet<BookAuthor> BookAuthors { get; set; }
+        public DbSet<Author> Authors { get; set; }
         public DbSet<Customer> Customers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //1 to 1
@@ -19,7 +20,7 @@ namespace Project_1.Data
                .HasForeignKey(b => b.AuthorId);
             
             //1 to Many
-            modelBuilder.Entity<BookAuthor>()
+            modelBuilder.Entity<Author>()
                 .HasMany(b => b.Books)
                 .WithOne(b => b.Author)
                 .HasForeignKey(a=>a.AuthorId);
