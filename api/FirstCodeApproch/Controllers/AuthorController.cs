@@ -20,7 +20,8 @@ namespace Project_1.Controllers
         {
             _db = db;
             _logger = logger;
-            _processor = processor;
+          
+            _processor = new SieveProcessor(sieveConfig);
         }
 
         [HttpGet]
@@ -29,6 +30,7 @@ namespace Project_1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<Author>>> GetAuthors( [FromQuery] SieveModel model)
         {
+           
             var authors = _db.Authors.AsQueryable();
             authors = _processor.Apply(model, authors);
             var result = await authors.ToArrayAsync();
