@@ -20,8 +20,7 @@ namespace Project_1.Controllers
         {
             _db = db;
             _logger = logger;
-          
-            _processor = new SieveProcessor(sieveConfig);
+            _processor = processor;
         }
 
         [HttpGet]
