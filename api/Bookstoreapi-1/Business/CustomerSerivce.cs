@@ -1,5 +1,7 @@
 ﻿using Bookstoreapi_1.Models;
 using Bookstoreapi_1.Repository.RepositryInterface;
+using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,7 +25,7 @@ namespace Bookstoreapi_1.Business
         {
             if (id <= 0)
             {
-                throw new ArgumentException("Customer ID must be greater than zero", nameof(id));
+                throw new ArgumentOutOfRangeException(nameof(id), "Customer ID must be greater than zero.");
             }
 
             return await _customerRepository.GetCustomerAsync(id);
@@ -39,24 +41,30 @@ namespace Bookstoreapi_1.Business
             await _customerRepository.CreateCustomerAsync(customer);
         }
 
-        public async Task UpdateCustomerAsync(Customer customer)
+        public async Task<Customer> UpdateCustomerAsync(int id, Customer customer)
         {
             if (customer == null)
             {
                 throw new ArgumentNullException(nameof(customer));
             }
 
-            await _customerRepository.UpdateCustomerAsync(customer);
+            if (id != customer.CustomerId)
+            {
+                throw new ArgumentException("The customer ID does not match the ID in the route.");
+            }
+
+            var updatedCustomer = await _customerRepository.UpdateCustomerAsync(customer);
+            return updatedCustomer;
         }
 
-        public async Task DeleteCustomerAsync(int id)
+        public async Task<bool> DeleteCustomerAsync(int id)
         {
             if (id <= 0)
             {
-                throw new ArgumentException("Customer ID must be greater than zero", nameof(id));
+                throw new ArgumentOutOfRangeException(nameof(id), "Customer ID must be greater than zero.");
             }
 
-            await _customerRepository.DeleteCustomerAsync(id);
+            return await _customerRepository.DeleteCustomerAsync(id);
         }
     }
 }
